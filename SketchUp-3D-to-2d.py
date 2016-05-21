@@ -16,14 +16,14 @@ plugins_menu = UI.menu("Plugins")#实例化 菜单栏
     sel = mod.selection#一组当前选中实体。使用模型。选择方法选择
 
 
-    phibeg = 0.0 if not phibeg #距离 变量初始化（或者说是放大的倍数=》有效中心点距离截图位置的距离）
+    phibeg = 500.0 if not phibeg #距离 变量初始化（或者说是放大的倍数=》有效中心点距离截图位置的距离）
 
-    phiend = 0 if not phiend #角度 变量初始化
+    phiend = 15 if not phiend #角度 变量初始化？
 
-    stepw = 0 if not stepw #俯角 变量初始化
+    stepw = 15 if not stepw #俯角 变量初始化
 
 
-    prompts = ["距离", "角度", "俯角"] #label提示标签
+    prompts = ["距离", "经度变量", "纬度变量"] #label提示标签
 
     values = [phibeg, phiend, stepw] #赋值 将input的值赋值给变量？
 
@@ -31,13 +31,13 @@ plugins_menu = UI.menu("Plugins")#实例化 菜单栏
 
     phibeg, phiend, stepw = results #将输入的值返回给变量
 
-    distance=5000 #定位相机初始位置
-    target = [0, 0, 0] #截图目标终点
-    up = [0, 0, 1] #截图起点
+   
 
     view = Sketchup.active_model.active_view #激活窗口（打开窗口）
 
-
+    distance=phibeg #定位相机初始位置
+    target = [0, 0, 0] #截图目标终点
+    up = [0, 0, 1] #截图起点
 
     dirAngle=0#图片水平截图的起始位置
     overAngle=0#图片上下的截图的起始位置
@@ -48,9 +48,9 @@ plugins_menu = UI.menu("Plugins")#实例化 菜单栏
       Dir.mkdir("c:/rotate")
     end
 
-    while distance>=0
 
-      while dirAngle<=360#360度截图（水平角度）
+
+      while dirAngle<360 
 
         while overAngle<90#球体的一面角度（上下角度）
 
@@ -67,15 +67,15 @@ plugins_menu = UI.menu("Plugins")#实例化 菜单栏
 
           view.invalidate#视图数据检测
 
-          view.write_image 'c:\\rotate\\'+dirAngle.to_s+"_"+overAngle.to_s+".jpg"#输出图片文件路径 第一个参数水平角度  第二个产参数上下角度
+          view.write_image 'c:\\rotate\\'+distance.to_s+"_"+dirAngle.to_s+"_"+overAngle.to_s+".jpg"#输出图片文件路径 第一个参数水平角度  第二个产参数上下角度
 
-          overAngle+=5#上下角度偏移量（每次加5）
+          overAngle+=stepw#上下角度偏移量（每次加5）
 
         end
           overAngle=0#
-          dirAngle+=5#水平角度偏移量（每次加5）
+          dirAngle+=phiend#水平角度偏移量（每次加5）
       end 
-        distance-=100#由远到近（每次-100）
-    end
+        
+   		'成功';
   
  end
